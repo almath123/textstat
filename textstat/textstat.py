@@ -77,8 +77,8 @@ class textstatistics:
 		lc = self.lexicon_count(text)
 		sc = self.sentence_count(text)
 		try:
-			ASL = float(lc/sc)
-			return round(lc/sc, 1)
+			ASL = float(lc/float(sc))
+			return ASL
 		except:
 			print("Error(ASL): Sentence Count is Zero, Cannot Divide")
 			return
@@ -89,7 +89,7 @@ class textstatistics:
 		words = self.lexicon_count(text)
 		try:
 			ASPW = float(syllable)/float(words)
-			return round(ASPW, 1)
+			return ASPW
 		except:
 			print("Error(ASyPW): Number of words are zero, cannot divide")
 			return
@@ -98,7 +98,7 @@ class textstatistics:
 	def avg_letter_per_word(self, text):
 		try:
 			ALPW = float(float(self.char_count(text))/float(self.lexicon_count(text)))
-			return round(ALPW, 2)
+			return ALPW
 		except:
 			print("Error(ALPW): Number of words are zero, cannot divide")
 			return
@@ -107,7 +107,7 @@ class textstatistics:
 	def avg_sentence_per_word(self, text):
 		try:
 			ASPW = float(float(self.sentence_count(text))/float(self.lexicon_count(text)))
-			return round(ASPW, 2)
+			return ASPW
 		except:
 			print("Error(AStPW): Number of words are zero, cannot divide")
 			return
@@ -117,14 +117,14 @@ class textstatistics:
 		ASL = self.avg_sentence_length(text)
 		ASW = self.avg_syllables_per_word(text)
 		FRE = 206.835 - float(1.015 * ASL) - float(84.6 * ASW)
-		return round(FRE, 2)
+		return FRE
 
 
 	def flesch_kincaid_grade(self, text):
 		ASL = self.avg_sentence_length(text)
 		ASW = self.avg_syllables_per_word(text)
 		FKRA = float(0.39 * ASL) + float(11.8 * ASW) - 15.59
-		return round(FKRA, 1)
+		return FKRA
 
 
 	def polysyllabcount(self, text):
@@ -140,8 +140,8 @@ class textstatistics:
 		if self.sentence_count(text) >= 3:
 			try:
 				poly_syllab = self.polysyllabcount(text)
-				SMOG = (1.043 * (30*(poly_syllab/self.sentence_count(text)))**.5) + 3.1291
-				return round(SMOG, 1)
+				SMOG = (1.043 * (30.0*(poly_syllab/float(self.sentence_count(text))))**.5) + 3.1291
+				return SMOG
 			except:
 				print("Error(SI): Sentence count is zero, cannot divide")
 		else:
@@ -149,10 +149,10 @@ class textstatistics:
 
 
 	def coleman_liau_index(self, text):
-		L = round(self.avg_letter_per_word(text)*100, 2)
-		S = round(self.avg_sentence_per_word(text)*100, 2)
+		L = self.avg_letter_per_word(text)*100
+		S = self.avg_sentence_per_word(text)*100
 		CLI = float((0.058 * L) - (0.296 * S) - 15.8)
-		return round(CLI, 2)
+		return CLI
 
 
 	def automated_readability_index(self, text):
@@ -162,8 +162,8 @@ class textstatistics:
 		try:
 			a = (float(chrs)/float(wrds))
 			b = (float(wrds)/float(snts))
-			ARI = (4.71 * round(a, 2)) + (0.5*round(b, 2)) - 21.43
-			return round(ARI, 1)
+			ARI = (4.71 * a) + (0.5*b) - 21.43
+			return ARI
 		except:
 			print("Error(ARI) : Sentence count is zero, cannot divide")
 			return
@@ -183,7 +183,7 @@ class textstatistics:
 					elif self.syllable_count(value) > 3:
 							difficult_word.append(value)
 					text = ' '.join(text_list[:100])
-					Number = float((len(easy_word)*1 + len(difficult_word)*3)/self.sentence_count(text))
+					Number = float((len(easy_word)*1 + len(difficult_word)*3)/float(self.sentence_count(text)))
 					if Number > 20:
 						Number /= 2
 					else:
@@ -208,21 +208,21 @@ class textstatistics:
 		word_count = self.lexicon_count(text)
 		count = word_count - self.difficult_words(text)
 		if word_count > 0:
-			per = float(count)/float(word_count)*100
+			per = float(count)/float(word_count)*100.0
 		else:
 			print("Error(DCRS): Word Count is zero cannot divide")
 			return 
-		difficult_words = 100-per
+		difficult_words = 100.0-per
 		if difficult_words > 5:
 				score = (0.1579 * difficult_words) + (0.0496 * self.avg_sentence_length(text)) + 3.6365
 		else:
 				score = (0.1579 * difficult_words) + (0.0496 * self.avg_sentence_length(text))
-		return round(score, 2)
+		return score
 
 
 	def gunning_fog(self, text):
 		try:
-			per_diff_words = (self.difficult_words(text)/self.lexicon_count(text)*100) + 5
+			per_diff_words = (self.difficult_words(text)/float(self.lexicon_count(text))*100.0) + 5
 			grade = 0.4*(self.avg_sentence_length(text) + per_diff_words)
 			return grade
 		except:
